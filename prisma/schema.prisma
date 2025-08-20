@@ -1,0 +1,64 @@
+// prisma/schema.prisma
+datasource db {
+  provider = "sqlite" // 배포 전엔 postgresql 등으로 변경 가능
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Review {
+  id        Int      @id @default(autoincrement())
+  rating    Int      @default(5)      // 기본값 추가 (기존 로우에 안전 적용)
+  title     String
+  body      String   @default("")     // 기본값 추가 (기존 로우에 안전 적용)
+  author    String?
+  createdAt DateTime @default(now())
+}
+
+model FAQ {
+  id        Int      @id @default(autoincrement())
+  question  String
+  answer    String
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
+model PricingOption {
+  id          Int      @id @default(autoincrement())
+  category    String
+  vehicleType String
+  hours       Int
+  price       Int
+  note        String?
+  createdAt   DateTime @default(now())
+}
+
+model Area {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+}
+
+model Inquiry {
+  id        Int      @id @default(autoincrement())
+  name      String
+  phone     String
+  gender    String?
+  carType   String?
+  region    String?
+  content   String?
+  agreed    Boolean  @default(false)
+  status    String   @default("new") // new|in_progress|done
+  createdAt DateTime @default(now())
+}
+
+model Recipient {
+  id        Int      @id @default(autoincrement())
+  phone     String   @unique       // 숫자만, 중복 방지
+  label     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
